@@ -11,7 +11,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(cors({
-  origin: 'http://localhost:3001',
+  origin: 'https://moonflix.in',
   methods: ['GET', 'POST'],
 }));
 
@@ -104,7 +104,6 @@ app.get('/api/getMetadata', async (req, res) => {
   }
 });
 
-// ✅ New: Batch Metadata Fetch Route (no logic changed)
 app.get('/api/getBatchMetadata', async (req, res) => {
   const { ids, type } = req.query;
 
@@ -184,7 +183,6 @@ app.get('/api/getBatchMetadata', async (req, res) => {
   res.json({ results });
 });
 
-// ✅ Image downloader with retry (unchanged)
 const fetchImageWithRetry = async (path, retries = 3, delay = 1000) => {
   if (!path) throw new Error('Image path is undefined');
   const url = `https://image.tmdb.org/t/p/original${path}`;
@@ -200,6 +198,7 @@ const fetchImageWithRetry = async (path, retries = 3, delay = 1000) => {
   }
 };
 
-app.listen(PORT, () => {
-  console.log(`✅ BunnyCDN Metadata Server running at: http://localhost:${PORT}`);
+// ✅ Use 0.0.0.0 to allow external access (e.g. Google VM)
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`✅ BunnyCDN Metadata Server running at: http://0.0.0.0:${PORT}`);
 });
